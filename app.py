@@ -51,8 +51,8 @@ data = {}
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'orvillejames123@gmail.com'
-app.config['MAIL_PASSWORD'] =  'uigs jqbr ayyv vhcl'
+app.config['MAIL_USERNAME'] = 'example@gmail.com' #gmail
+app.config['MAIL_PASSWORD'] =  'example' #pass
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)

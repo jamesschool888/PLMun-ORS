@@ -1,0 +1,448 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Online Request Form</title>
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+
+    <!-- SweetAlert2 CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+  </head>
+
+  <body class="bg-light">
+  <main>
+  <header>
+    
+  </header>
+
+  <style>
+    .notification-item{
+      position: relative;
+      padding-right: 25px;
+    }
+
+    .delete-notification-btn {
+      position: absolute;
+      top: 5px; /* Adjust to align properly */
+      right: 5px; /* Adjust to align properly */
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      font-size: 16px;
+      cursor: pointer;
+      visibility: hidden;
+  }
+
+  .notification-item:hover .delete-notification-btn {
+    visibility: visible;
+}
+
+    .form-group.border {
+      height: 200px;
+      overflow-y: auto; 
+    }
+
+    .dropdown-item {
+        border-bottom: 1px solid #dee2e6; /* Add bottom border */
+    }
+
+    .dropdown-menu {
+      max-height: 300px;
+      overflow-y: auto;
+  }
+    
+    .dropdown-item:last-child {
+        border-bottom: none; /* Remove bottom border from the last item */
+    }
+  </style>
+
+    <div class="container">
+      <div class="py-5 text-center">
+        <h2>Online Request of Files</h2>
+        <p class="lead"></p>
+      </div>
+
+      <div class="row">
+
+        
+        <div class="col-md-8 order-md-1">
+          <h4 class="mb-3"></h4>
+          <form class="needs-validation" action="{{ url_for('submit_form') }}" method="post">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName">First name</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="John" value="" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="lastName">Last name</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Doe" value="" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+            <label for="Student Number">Student Number <span class="text-muted">(8 digits)</span></label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                <span class="input-group-text">#</span>
+                </div>
+                <input type="text" class="form-control" id="Student Number" name ="Student Number" placeholder="12345678" required pattern="\d{8}">
+                <div class="invalid-feedback" style="width: 100%;">
+                Your student number is required.
+                </div>
+            </div>
+            </div>
+
+            <div class="mb-3">
+            <label for="email">E-mail <span class="text-muted"></span></label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+            <div class="invalid-feedback">
+            </div>
+            </div>
+
+            <div class="row justify-content-center">
+              <div class="col-md-5 mb-3">
+                  <div class="form-group border p-3">
+                      <label for="certificates"><strong>Certificates</strong></label>
+                      {% for certificate in certificate_options %}
+                      <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="{{ certificate.value }}" name="document">
+                          <label class="form-check-label ml-2">
+                              {{ certificate.label }}
+                          </label>
+                      </div>
+                      {% endfor %}
+                  </div>
+              </div>
+
+              <div class="col-md-5 mb-3">
+                  <div class="form-group border p-3">
+                      <label for="forms"><strong>Forms</strong></label>
+                      {% for form in form_options %}
+                      <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="{{ form.value }}" name="document">
+                          <label class="form-check-label ml-2">
+                              {{ form.label }}
+                          </label>
+                      </div>
+                      {% endfor %}
+                  </div>
+              </div>
+
+              <div class="col-md-5 mb-3">
+                <div class="form-group border p-3">
+                    <label for="For CAV Request"><strong>For CAV Requests</strong></label>
+                    {% for cav in for_cav_request %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{ cav.value }}" name="document">
+                        <label class="form-check-label ml-2">
+                            {{ cav.label }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+              </div>
+
+              <div class="col-md-5 mb-3">
+                <div class="form-group border p-3">
+                    <label for="For CAV Request"><strong>Others</strong></label>
+                    {% for other in other_options %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{ other.value }}" name="document">
+                        <label class="form-check-label ml-2">
+                            {{ other.label }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+              </div>
+
+              <div class="col-md-5 mb-3">
+                <div id="purposeGroup" class="form-group border p-2">
+                    <label for="For CAV Request"><strong>Purpose (REQUIRED)</strong></label>
+                    {% for purpose in purpose_options %}
+                    <div class="form-check">
+                        {% if purpose.label == "Others (Please Specify)" %}
+                        <input class="form-check-input" type="checkbox" value="{{ purpose.value }}" name="purpose" onclick="showHideTextBox(this)">
+                        {% else %}
+                        <input class="form-check-input" type="checkbox" value="{{ purpose.value }}" name="purpose">
+                        {% endif %}
+                        <label class="form-check-label ml-2">
+                            {{ purpose.label }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-5 mb-3" id="otherPurposeTextBox" style="display: none;">
+                <div class="border p-2">
+                    <label for="otherPurposeTextBox"><strong>Other Purpose</strong></label>
+                    <input type="text"  class="form-control mt-2"  placeholder="Please specify" maxlength="34" oninput="updateCharCount(this)" name="other_purpose" id="other_purpose">
+                    <div id="charCount" class="text-muted small">34 characters remaining</div>
+                </div>
+            </div>
+
+            </div>
+
+        <div class="col-md-12 mt-3">
+          <button type="submit" class="btn btn-primary btn-lg btn-block" onclick="showSweetAlert(event)">Submit the form</button>
+      </div>
+        </form>
+    </div>
+
+    <div class="col-md-4 order-md-2 mb-4">
+      <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Price list</span>
+      </h4>
+      <ul id="priceList" class="list-group mb-3">
+          <!-- Price list items will be added dynamically here -->
+      </ul>
+      <p id="totalPrice" class="text-muted">Total: ₱0</p>
+  </div>
+  </main>
+
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="#">Online File Request</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownNotifications" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Notifications
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownNotifications">
+              <!-- Dropdown items for Notifications -->
+              {% for request in notifications_db | reverse%}
+            <div class="dropdown-item notification-item">
+              <span class="notification-text" href="#">
+                  {{ request.processed | safe}}
+                    {% if request.reason %}
+                        <br>
+                        Reason: {{ request.reason }}
+                        <br>
+                    {% endif %}
+                  {{ request.admin_username }}
+              </span>
+              <button class="delete-notification-btn" onclick="deleteNotification(event)">[X]</button>
+            </div>
+          {% endfor %}
+          </div>
+      </li>
+      <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownRequests" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Pending requests
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownRequests">
+            <!-- Dropdown items for Pending requests -->
+            {% for request in requests_db | reverse%}
+            <div class="dropdown-item">
+              <strong> #{{ request.formatted_request_num }}: </strong> <br>
+              {% for document in request.document %} 
+                  {{ document }} <br> 
+              {% endfor %} 
+
+              <strong>Purpose: </strong> <br> 
+              {% for purpose in request.purpose %} 
+                  {% if purpose == 'Others' %}
+                      {% if request.other_purpose %}
+                          {{ request.other_purpose }} <br>
+                      {% endif %}
+                  {% else %}
+                      {{ purpose }} <br>
+                  {% endif %}
+              {% endfor %}
+
+              <strong>Price: </strong> ₱{{ request.total_price }} <br>
+              <form method="post" action="{{ url_for('cancel_request') }}" style="display:inline;">
+                  <input type="hidden" name="request_id" value="{{ request.formatted_request_num }}">
+                  <button type="submit" class="btn btn-outline-danger btn-sm">Cancel</button>
+              </form>
+            </div>
+            {% endfor %}
+        <li class="nav-item">
+          <a class="nav-link" href="#">Portal</a>
+        </li>
+      </ul>
+      <form class="form-inline mt-2 mt-md-0" action="{{ url_for('logout') }}" method="post">
+        <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Log out</button>
+      </form>
+    </div>
+  </nav>
+
+  <footer class="footer">
+    <div class="container">
+      <span class="text-muted"><p class="mt-5 mb-3 text-muted">&copy; 2024</p></span>
+    </div>
+  </footer>
+
+
+      <!-- Bootstrap core JavaScript
+      ================================================== -->
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script src="/static/js/bootstrap.js"></script>
+      <!-- jQuery (required) -->
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+      <!-- Popper.js (required) -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  
+      <!-- Bootstrap JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+</body>
+</html>
+
+<script>
+
+      // Define prices for each document
+      const documentPrices = {
+        //Certificates
+        "Cert. of Grades": 30,
+        "Cert. of Enrolment": 30,
+        "CAV / S.O Cert": 30,
+        "Cert. of Earned Units": 30,
+
+        //Forms
+        "Evaluation Form": 30,
+        "Subject Credit Form": 30,
+        "Shifting Form": 30,
+        "Completion Form": 30,
+        "AW / Adding /Dropping Form": 30,
+
+        //For CAV Requests
+        "CAV": 80,
+
+        //Others
+        "COM Reprint": 120,
+        "Diploma": 100,
+        "Cert. of Candidacy for Graduation": 30,
+        "Medium of Instruction": 30,
+
+        //Purpose
+        "For DFA": 0,
+        "For CHED": 0,
+        "For PNP": 0,
+        "For Board Exam (PRC)": 0,
+        "For Scholarship": 0,
+        "Others": 0,
+    };
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const deleteButtons = document.querySelectorAll('.delete-notification-btn');
+  
+      deleteButtons.forEach(button => {
+          button.addEventListener('click', function(event) {
+              const notificationItem = event.target.closest('.notification-item');
+              if (notificationItem) {
+                  notificationItem.remove(); // Remove the notification item from the DOM
+              }
+          });
+      });
+  });
+
+    // Update price list and total price
+    function updatePriceList() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        const priceList = document.getElementById('priceList');
+        let totalPrice = 0;
+
+        // Clear previous price list items
+        priceList.innerHTML = '';
+
+        // Add selected items to the price list
+        checkboxes.forEach(checkbox => {
+            const itemName = checkbox.value;
+            const itemPrice = documentPrices[itemName];
+            totalPrice += itemPrice;
+
+            const listItem = document.createElement('li');
+            listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'lh-condensed');
+            listItem.innerHTML = `
+                <div>
+                    <h6 class="my-0">${itemName}</h6>
+                </div>
+                <span class="text-muted">₱${itemPrice}</span>
+            `;
+            priceList.appendChild(listItem);
+        });
+
+        // Update total price
+        const totalPriceElement = document.getElementById('totalPrice');
+        totalPriceElement.textContent = `Total: ₱${totalPrice}`;
+    }
+
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updatePriceList);
+  });
+
+  function updateCharCount(element) {
+    var maxLength = element.getAttribute('maxlength');
+    var currentLength = element.value.length;
+    var remaining = maxLength - currentLength;
+    var charCountElement = document.getElementById('charCount');
+    charCountElement.textContent = remaining + ' characters remaining';
+}
+
+function showHideTextBox(checkbox) {
+  var otherPurposeTextBox = document.getElementById("otherPurposeTextBox");
+  var textbox = document.getElementById('other_purpose');
+  if (checkbox.checked && checkbox.value === "Others") {
+      otherPurposeTextBox.style.display = "block";
+      textbox.required = true; // Add required attribute
+  } else {
+      otherPurposeTextBox.style.display = "none";
+      textbox.required = false; // Remove required attribute if not checked
+  }
+}
+  function showSweetAlert(event) {
+    event.preventDefault();
+    const form = document.querySelector('form');
+    const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
+    const purposeCheckboxes = form.querySelectorAll('input[name="purpose"]:checked');
+
+    if (checkboxes.length === 0 || purposeCheckboxes.length === 0) {
+      Swal.fire({
+          title: 'Error!',
+          text: 'Please select at least one form and one purpose to submit.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+      });
+      return; 
+  }
+
+
+    const isValid = form.checkValidity();
+  if (isValid) {
+      Swal.fire({
+          title: 'Success!',
+          text: 'Your form has been submitted successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              form.submit();
+          }
+      });
+  } 
+  else {
+      Swal.fire({
+          title: 'Error!',
+          text: 'Please fill out all the required fields.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+      });
+  }
+}
+</script>
+

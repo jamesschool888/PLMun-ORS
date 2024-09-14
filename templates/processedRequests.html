@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+    <link href="https://unpkg.com/feather-icons/dist/feather.css" rel="stylesheet">
+
+    <title>{{ admin_username }} Dashboard - Processed Requests</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+
+  <style>
+    .swal-center {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .navbar .form-control {
+        padding: .75rem 1rem;
+        border-width: 0;
+        border-radius: 0;
+    }
+    .form-control-dark {
+        color: #fff;
+        background-color: rgba(255, 255, 255, .1);
+        border-color: rgba(255, 255, 255, .1);
+    }
+    .w-100 {
+        width: 100% !important;
+    }
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: rgba(255, 255, 255, .1);
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+    button, input {
+        overflow: visible;
+    }
+    button, input, optgroup, select, textarea {
+        margin: 0;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+    }
+    *, ::after, ::before {
+        box-sizing: border-box;
+    }
+
+    input[type="text" i] {
+        padding-block: 1px;
+        padding-inline: 2px;
+    }
+
+    input:not([type="file" i], [type="image" i], [type="checkbox" i], [type="radio" i]) {
+    }
+    .sidebar-sticky {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 48px;
+        height: calc(100vh - 48px);
+        padding-top: .5rem;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    *, ::after, ::before {
+        box-sizing: border-box;
+    }
+
+    div {
+        display: block;
+        unicode-bidi: isolate;
+    }
+    body {
+        font-size: .875rem;
+    }
+    body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        text-align: left;
+        background-color: #fff;
+    }
+    :root {
+        --blue: #007bff;
+        --indigo: #6610f2;
+        --purple: #6f42c1;
+        --pink: #e83e8c;
+        --red: #dc3545;
+        --orange: #fd7e14;
+        --yellow: #ffc107;
+        --green: #28a745;
+        --teal: #20c997;
+        --cyan: #17a2b8;
+        --white: #fff;
+        --gray: #6c757d;
+        --gray-dark: #343a40;
+        --primary: #007bff;
+        --secondary: #6c757d;
+        --success: #28a745;
+        --info: #17a2b8;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --light: #f8f9fa;
+        --dark: #343a40;
+        --breakpoint-xs: 0;
+        --breakpoint-sm: 576px;
+        --breakpoint-md: 768px;
+        --breakpoint-lg: 992px;
+        --breakpoint-xl: 1200px;
+        --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    :host, :root {
+        --rem: 16;
+    }
+    html {
+        font-family: sans-serif;
+        line-height: 1.15;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        -ms-overflow-style: scrollbar;
+        -webkit-tap-highlight-color: transparent;
+    }
+    *, ::after, ::before {
+        box-sizing: border-box;
+    }
+    *, ::after, ::before {
+        box-sizing: border-box;
+    }
+
+    html[data-minimalscrollbar="yes"] ::-webkit-scrollbar {
+        width: 9px !important;
+        height: 9px !important;
+    }
+
+    html[data-minimalscrollbar="yes"] ::-webkit-scrollbar-corner {
+        background: rgba(255, 255, 255, 0.3);
+        border-width: 1px;
+        border-style: solid;
+        border-color: transparent;
+        border-image: initial;
+    }
+
+    html[data-minimalscrollbar="yes"] ::-webkit-scrollbar-thumb {
+        z-index: 2147483647;
+        background-clip: content-box;
+        width: 1px !important;
+        background-color: rgba(0, 0, 0, 0.4) !important;
+        border-radius: 12px;
+        margin: 1px !important;
+        border-width: 2px !important;
+        border-style: solid !important;
+        border-color: transparent !important;
+        border-image: initial !important;
+    }
+
+    html[data-minimalscrollbar="yes"] ::-webkit-scrollbar-track-piece {
+        width: 6px !important;
+        height: 5px !important;
+        margin: 1px;
+        padding: 0px;
+        background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+
+  <body>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Finished Requests</a>
+      <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search" id="searchInput">
+      <ul class="navbar-nav px-3">
+          <form class="nav-item text-nowrap" action="/logout" method="post">
+              <button class="btn btn-outline-success my-2 my-sm-0">Log out</button>
+          </form>
+      </ul>
+  </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span data-feather="home">
+                </span>
+                Dashboard
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="{{ url_for('pending_page') }}">Pending Requests <span
+                          class="badge badge-danger">{{ pending_requests_count }}</span></a>
+                  <a class="dropdown-item" href="{{ url_for('ongoing_page') }}">Ongoing Requests <span
+                          class="badge badge-danger">{{ ongoing_requests_count }}</span></a>
+                  <a class="dropdown-item text-danger" href="{{ url_for('finished_page') }}">Finished
+                      Requests</a>
+              </div>
+              </li>
+            </ul>
+        </nav>
+  
+          <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+              <h1 class="h2">Finished Requests</h1>
+              <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-striped table-sm" id="requestsTable">
+                  <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Full name</th>
+                        <th>E-mail</th>
+                        <th>File Requested</th>
+                        <th>Purpose</th>
+                        <th>Number</th>
+                        <th>Date Processed</th>
+                        <th>Status</th>
+                        <th>Processed by </th>
+                    </tr>
+                </thead>
+                <tbody>
+        {% for row in finished_table_data %}
+          <tr>
+            <td>{{ decrypt_data(row['student_number']) }}</td>
+            <td>{{ decrypt_data(row['first_name']) }} {{ decrypt_data(row['last_name']) }}</td>
+            <td>{{ decrypt_data(row['email']) }}</td>
+            <td>
+              {% for document in row.document %}
+                {{ document }}<br>
+              {% endfor %}
+            </td>
+            <td>
+              {% for purpose in row.purpose %} 
+                  {% if purpose == 'Others' %}
+                      {% if row.other_purpose %}
+                          {{ row.other_purpose }} <br>
+                      {% endif %}
+                  {% else %}
+                      {{ purpose }} <br>
+                  {% endif %}
+              {% endfor %}
+            </td>
+            <td>{{ row.formatted_request_num }}</td>
+            <td>{{ row.date_processed }}</td>
+            <td>
+              {% if row.reason_for_decline %}
+                  <span class="text-danger font-weight-bold">Declined: {{ row.reason_for_decline }}</span>
+              {% elif row.successful %}
+                  <span class="text-success font-weight-bold">Successful</span>
+              {% elif row.unsuccessful %}
+                  <span class="text-danger font-weight-bold">Unsuccessful: {{ row.reason_for_unsuccess }}</span>
+              {% endif %}
+            </td>
+            <td> {{ row.admin_username }}</td>
+            
+        </tr>
+        {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </main>
+        </div>
+      </div>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+      feather.replace();
+      document.getElementById('searchInput').addEventListener('input', function () {
+        var searchValue = this.value.toLowerCase();
+        var rows = document.querySelectorAll('#requestsTable tbody tr');
+        rows.forEach(function (row) {
+          var cells = row.querySelectorAll('td');
+          var found = false;
+          cells.forEach(function (cell) {
+            if (cell.textContent.toLowerCase().includes(searchValue)) {
+              found = true;
+            }
+          });
+          if (found) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

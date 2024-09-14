@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+    <title>{{ admin_username }} Dashboard - Pending Requests</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<style>
+    .swal-center {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .navbar .form-control {
+        padding: .75rem 1rem;
+        border-width: 0;
+        border-radius: 0;
+    }
+
+    .form-control-dark {
+        color: #fff;
+        background-color: rgba(255, 255, 255, .1);
+        border-color: rgba(255, 255, 255, .1);
+    }
+
+    .w-100 {
+        width: 100% !important;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: rgba(255, 255, 255, .1);
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    button, input {
+        overflow: visible;
+    }
+
+    button, input, optgroup, select, textarea {
+        margin: 0;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+    }
+
+    *,
+    ::after,
+    ::before {
+        box-sizing: border-box;
+    }
+
+    .sidebar-sticky {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 48px;
+        height: calc(100vh - 48px);
+        padding-top: .5rem;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    div {
+        display: block;
+        unicode-bidi: isolate;
+    }
+
+    body {
+        font-size: .875rem;
+    }
+
+    body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif,
+            "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        text-align: left;
+        background-color: #fff;
+    }
+
+    :root {
+        --blue: #007bff;
+        --indigo: #6610f2;
+        --purple: #6f42c1;
+        --pink: #e83e8c;
+        --red: #dc3545;
+        --orange: #fd7e14;
+        --yellow: #ffc107;
+        --green: #28a745;
+        --teal: #20c997;
+        --cyan: #17a2b8;
+        --white: #fff;
+        --gray: #6c757d;
+        --gray-dark: #343a40;
+        --primary: #007bff;
+        --secondary: #6c757d;
+        --success: #28a745;
+        --info: #17a2b8;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --light: #f8f9fa;
+        --dark: #343a40;
+        --breakpoint-xs: 0;
+        --breakpoint-sm: 576px;
+        --breakpoint-md: 768px;
+        --breakpoint-lg: 992px;
+        --breakpoint-xl: 1200px;
+        --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+            sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+            monospace;
+    }
+
+    :host,
+    :root {
+        --rem: 16;
+    }
+
+    html {
+        font-family: sans-serif;
+        line-height: 1.15;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        -ms-overflow-style: scrollbar;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    *,
+    ::after,
+    ::before {
+        box-sizing: border-box;
+    }
+
+    *,
+    ::after,
+    ::before {
+        box-sizing: border-box;
+    }
+
+    html[data-minimalscrollbar="yes"] ::-webkit-scrollbar {
+        width: 9px !important;
+        height: 9px !important;
+    }
+
+    html[data-minimalscrollbar="yes"] ::-webkit-scrollbar-corner {
+        background: rgba(255, 255, 255, 0.3);
+        border-width: 1px;
+        border-style: solid;
+        border-color: transparent;
+        border-image: initial;
+    }
+
+    html[data-minimalscrollbar="yes"] ::-webkit-scrollbar-thumb {
+        z-index: 2147483647;
+        background-clip: content-box;
+        width: 1px !important;
+        background-color: rgba(0, 0, 0, 0.4) !important;
+        border-radius: 12px;
+        margin: 1px !important;
+        border-width: 2px !important;
+        border-style: solid !important;
+        border-color: transparent !important;
+        border-image: initial !important;
+    }
+
+    html[data-minimalscrollbar="yes"] ::-webkit-scrollbar-track-piece {
+        width: 6px !important;
+        height: 5px !important;
+        margin: 1px;
+        padding: 0px;
+        background: rgba(255, 255, 255, 0.3);
+    }
+</style>
+
+<body>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Pending Request</a>
+        <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search" id="searchInput">
+        <ul class="navbar-nav px-3">
+            <form class="nav-item text-nowrap" action="/logout" method="post">
+                <button class="btn btn-outline-success my-2 my-sm-0">Log out</button>
+            </form>
+        </ul>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span data-feather="home">
+                                </span>
+                                Dashboard
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="{{ url_for('pending_page') }}">Pending Requests <span
+                                        class="badge badge-danger">{{ pending_requests_count }}</span></a>
+                                <a class="dropdown-item" href="{{ url_for('ongoing_page') }}">Ongoing Requests <span
+                                        class="badge badge-danger">{{ ongoing_requests_count }}</span></a>
+                                <a class="dropdown-item text-danger" href="{{ url_for('finished_page') }}">Finished
+                                    Requests</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+                    <h1 class="h2">Requests</h1>
+                        <div class="row m-0">
+                            <div class="col-auto p-1">
+                                <button type="button" class="btn btn-success btn-sm" onclick="approveSelected()">Approve Selected</button>
+                            </div>
+                            <div class="col-auto p-1">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="declineSelected()">Decline Selected</button>
+                            </div>
+                        </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm" id="requestsTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll"  onchange="selectAllRows(this)"></th>
+                                <th>Student ID</th>
+                                <th>Full name</th>
+                                <th>E-mail</th>
+                                <th>File Requested</th>
+                                <th>Purpose</th>
+                                <th>Number</th>
+                                <th>Date</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table_data %}
+                            <tr>
+                                <td><input type="checkbox" class="select-checkbox"></td>
+                                <td>{{ decrypt_data(row['student_number']) }}</td>
+                                <td>{{ decrypt_data(row['first_name']) }} {{ decrypt_data(row['last_name']) }}</td>
+                                <td>{{ decrypt_data(row['email']) }}</td>
+                                <td>
+                                    {% for document in row.document %}
+                                    {{ document }}<br>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% for purpose in row.purpose %}
+                                    {% if purpose == 'Others' %}
+                                    {% if row.other_purpose %}
+                                    {{ row.other_purpose }} <br>
+                                    {% endif %}
+                                    {% else %}
+                                    {{ purpose }} <br>
+                                    {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ row.formatted_request_num }}</td>
+                                <td>{{ row.date }}</td>
+                                <td>₱{{ row.total_price}}</td>
+                                
+                                <td class="p-0" style="display: none;">
+                                    <div class="row m-0">
+                                        <div class="col-auto p-1">
+                                            <form action="/approve_request" method="POST" id="approveForm">
+                                                <input type="hidden" name="request_id" value="{{ row.requestNum }}">
+                                                <input type="hidden" name="claim_date" id="claim_date">
+                                                <button type="button" class="btn btn-success btn-sm" onclick="showDatePicker(showDatePicker('{{ row.requestNum }}'))">Approve</button>
+                                            </form>
+                                        </div>
+                                        <div class="col-auto p-1">
+                                            <form action="/decline_request" method="POST" id="declineForm">
+                                                <input type="hidden" name="reason_for_decline" id="reason_for_decline">
+                                                <input type="hidden" name="request_id" value="{{ row.requestNum }}">
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="confirmDecline(event)">Decline</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+    feather.replace();
+function selectAllRows(checkbox) {
+    var rows = document.querySelectorAll('#requestsTable tbody tr');
+    rows.forEach(function(row) {
+        // Check if the row is visible
+        if (row.offsetParent !== null) {
+            // Select the checkbox only if the row is visible
+            var checkbox = row.querySelector('input[type="checkbox"]');
+            checkbox.checked = checkbox.checked || checkbox !== null && checkbox !== undefined;
+        }
+    });
+
+    // Update all row checkboxes based on the "Select All" checkbox state
+    if (!checkbox.checked) {
+        rows.forEach(function(row) {
+            var rowCheckbox = row.querySelector('input[type="checkbox"]');
+            rowCheckbox.checked = false;
+        });
+    }
+}
+
+function confirmDecline(event) {
+    event.preventDefault();
+    Swal.fire({
+        title: 'Are you sure you want to decline?',
+        input: 'textarea',
+        inputLabel: 'Reason for Decline',
+        inputPlaceholder: 'Enter reason here...',
+        inputAttributes: {
+            'aria-label': 'Reason for Decline'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Yes, decline',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        inputValidator: (value) => {
+            if (!value) {
+                return 'You need to enter a reason!';
+            }
+        },
+        customClass: {
+            popup: 'swal-center',
+            containter: 'swal-center'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var visibleRows = document.querySelectorAll('#requestsTable tbody tr:not([style="display: none;"])');
+            if (visibleRows.length > 0) {
+                var firstVisibleRow = visibleRows[0];
+                var requestId = firstVisibleRow.querySelector('input[name="request_id"]').value;
+                document.getElementById('reason_for_decline').value = result.value;
+                document.getElementById('declineForm').querySelector('input[name="request_id"]').value = requestId;
+                document.getElementById('declineForm').submit();
+            } else {
+                Swal.fire('No visible row to decline.');
+            }
+        }
+    });
+}
+
+// Function that shows a date picker dialog using Swal library, validates the selected date, and submits the form with the selected date if confirmed.
+function showDatePicker() {
+    Swal.fire({
+        title: 'Select a date',
+        html: '<input type="date" id="datepicker" class="swal2-input">',
+        showCancelButton: true,
+        confirmButtonText: 'Submit',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        // Validates the selected date and displays a validation message if no date is selected. Returns the selected date.
+        preConfirm: () => {
+            const selectedDate = document.getElementById('datepicker').value;
+            console.log('Selected date:', selectedDate); // Log selected date
+            if (!selectedDate) {
+                Swal.showValidationMessage('Please select a date');
+            }
+            return selectedDate;
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const selectedDate = result.value;
+            console.log('Selected date:', selectedDate); // Log selected date again
+            document.getElementById('claim_date').value = selectedDate;
+            document.getElementById('approveForm').submit();
+        }
+    });
+}
+
+      // Function to prompt a confirmation dialog for declining, capturing the reason for decline, and submitting the decline form if confirmed.
+function approveSelected() {
+    var selectedRows = document.querySelectorAll('#requestsTable tbody tr input[type="checkbox"]:checked');
+    var selectedIds = [];
+    selectedRows.forEach(function(row) {
+        var requestId = row.parentNode.parentNode.querySelector('input[name="request_id"]').value;
+        selectedIds.push(requestId);
+    });
+
+    var minDate = new Date();
+    minDate.setDate(minDate.getDate() + 4);
+    var minDateString = minDate.toISOString().split('T')[0];
+
+    Swal.fire({
+        title: 'Select a date',
+        html: '<input type="date" id="datepicker" class="swal2-input" min="${minDateString}"">',
+        showCancelButton: true,
+        confirmButtonText: 'Submit',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        preConfirm: () => {
+            const selectedDate = document.getElementById('datepicker').value;
+            if (!selectedDate) {
+                Swal.showValidationMessage('Please select a date');
+            }
+            return selectedDate;
+        },
+        customClass: {
+            popup: 'swal-center',
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const selectedDate = result.value;
+            fetch('/approve_selected', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ selectedIds: selectedIds, claim_date: selectedDate })
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Handle successful response
+                    selectedRows.forEach(row => {
+                        row.parentNode.parentNode.remove(); // Remove the row from the table
+                    });
+                } else {
+                    // Handle error response
+                    Swal.fire('Error', 'Failed to approve selected requests', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error approving selected requests:', error);
+                Swal.fire('Error', 'Failed to approve selected requests', 'error');
+            });
+        }
+    });
+}
+    
+function declineSelected() {
+    // Collect the reason for decline before the loop
+    Swal.fire({
+        title: 'Are you sure you want to decline?',
+        input: 'textarea',
+        inputLabel: 'Reason for Decline',
+        inputPlaceholder: 'Enter reason here...',
+        inputAttributes: {
+            'aria-label': 'Reason for Decline'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Yes, decline',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        inputValidator: (value) => {
+            if (!value) {
+                return 'You need to enter a reason!';
+            }
+        },
+        customClass: {
+            popup: 'swal-center',
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var reasonForDecline = result.value;
+            if (reasonForDecline !== null && reasonForDecline.trim() !== '') {
+                var selectedRows = document.querySelectorAll('#requestsTable tbody tr input[type="checkbox"]:checked');
+                var selectedIds = [];
+
+                selectedRows.forEach(function(row) {
+                    var requestId = row.parentNode.parentNode.querySelector('input[name="request_id"]').value;
+                    selectedIds.push(parseInt(requestId));
+                    // Call a function to decline each selected row with the collected reason
+                    declineSelectedRow(row, selectedIds, reasonForDecline);
+                    // Remove the row from the DOM
+                    row.parentNode.parentNode.remove();
+                });
+            } else {
+                Swal.fire('Please enter a reason for decline.');
+            }
+        }
+    });
+}
+
+// Function to decline each selected row with the collected reason
+function declineSelectedRow(selectedRowCheckbox, selectedIds, reasonForDecline) {
+    fetch('/decline_selected', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ selectedIds: selectedIds, reasonForDecline: reasonForDecline })
+    })
+    .then(response => {
+        // Handle response
+    })
+    .catch(error => {
+        console.error('Error declining selected rows:', error);
+        Swal.fire('Error', 'Failed to decline selected requests.', 'error');
+    });
+}
+    
+    document.getElementById('searchInput').addEventListener('input', function () {
+        var searchValue = this.value.toLowerCase();
+        var rows = document.querySelectorAll('#requestsTable tbody tr');
+        rows.forEach(function (row) {
+            var cells = row.querySelectorAll('td');
+            var found = false;
+            cells.forEach(function (cell) {
+                if (cell.textContent.toLowerCase().includes(searchValue)) {
+                    found = true;
+                }
+            });
+            if (found) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+</body>
+</html>
